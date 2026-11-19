@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vice City Cover Lab — multi-panel GTA-style poster maker</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <h1>VICE CITY COVER LAB</h1>
+    <p id="liveLine" class="live-line">4 panels · 0 photos · 1080×1080 · sunset grade</p>
+  </div>
+  <p class="tagline">Your photo + a caption → a GTA-style poster cover, exported as PNG.</p>
+</header>
+<main class="app">
+  <section class="controls" aria-label="Cover controls">
+    <div class="group">
+      <h2>1 · Photos</h2>
+      <p class="hint">One photo fills every panel, or give each panel its own. Drag the preview to reposition the selected panel's photo.</p>
+      <div class="slots" id="slots"></div>
+      <div class="sample-row">
+        <span>Try a sample:</span>
+        <button type="button" data-sample="pier">Pier dusk</button>
+        <button type="button" data-sample="boulevard">Boulevard</button>
+        <button type="button" data-sample="sunset-drive">Sunset drive</button>
+        <button type="button" data-sample="neon-avenue">Neon avenue</button>
+      </div>
+    </div>
+    <div class="group">
+      <h2>2 · Layout</h2>
+      <div class="seg" id="layoutSeg" role="group" aria-label="Panel layout">
+        <button type="button" data-layout="heroStrip" class="on">Hero strip</button>
+        <button type="button" data-layout="quad">Quad</button>
+        <button type="button" data-layout="trio">Trio</button>
+        <button type="button" data-layout="solo">Solo</button>
+      </div>
+    </div>
+    <div class="group">
+      <h2>3 · Grade</h2>
+      <div class="seg" id="gradeSeg" role="group" aria-label="Colour grade">
+        <button type="button" data-grade="sunset" class="on">Sunset</button>
+        <button type="button" data-grade="neon">Neon</button>
+        <button type="button" data-grade="noir">Noir</button>
+      </div>
+    </div>
+    <div class="group">
+      <h2>4 · Caption</h2>
+      <label>Kicker <input id="kicker" type="text" maxlength="32" value="COVER LAB · EST. 2026"></label>
+      <label>Title <input id="title" type="text" maxlength="28" value="VICE CITY NIGHTS"></label>
+      <label>Subtitle <input id="subtitle" type="text" maxlength="48" value="A sunset heist in four frames"></label>
+    </div>
+    <div class="group">
+      <h2>5 · Selected panel</h2>
+      <label>Zoom <input id="zoom" type="range" min="100" max="220" value="100"></label>
+      <p class="hint" id="panelHint">Panel 1 selected — drag the preview to pan its photo.</p>
+    </div>
+    <div class="group">
+      <h2>6 · Export size</h2>
+      <div class="seg" id="sizeSeg" role="group" aria-label="Export size">
+        <button type="button" data-size="square" class="on">1080 × 1080</button>
+        <button type="button" data-size="portrait">1080 × 1350</button>
+        <button type="button" data-size="wide">1920 × 1080</button>
+      </div>
+      <button id="export" type="button" class="export">Export PNG</button>
+      <p id="status" role="status"></p>
+    </div>
+    <p class="fineprint">Photos never leave your machine. No Rockstar logo, artwork or font: lettering is Anton &amp; Archivo Black under the SIL Open Font License, shipped in app/fonts.</p>
+  </section>
+  <section class="stage" aria-label="Live preview">
+    <canvas id="preview" width="1080" height="1080" aria-label="The cover preview"></canvas>
+    <p class="stage-hint">Click a panel to select it · drag to pan · live preview is the export</p>
+  </section>
+</main>
+<script type="module" src="./src/editor.js"></script>
+</body>
+</html>
