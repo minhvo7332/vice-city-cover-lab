@@ -78,6 +78,11 @@ button.export {
   border: 0; border-radius: 9px; box-shadow: 0 4px 18px rgba(255, 46, 136, 0.4);
 }
 button.export:hover { filter: brightness(1.12); }
+button.remix {
+  font: inherit; font-weight: 800; padding: 10px; cursor: pointer;
+  color: var(--cyan); background: transparent; border: 1px dashed var(--cyan); border-radius: 9px;
+}
+button.remix:hover { background: rgba(46, 230, 255, 0.12); }
 #status { margin: 0; color: var(--cyan); font-size: 13px; min-height: 19px; }
 .fineprint { margin: 0; color: #7d7280; font-size: 12px; }
 

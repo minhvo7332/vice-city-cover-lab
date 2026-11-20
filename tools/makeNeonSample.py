@@ -8,11 +8,14 @@ Run: python3 tools/makeNeonSample.py  ->  app/samples/neon-avenue.jpg
 """
 import math
 import random
+import sys
 from PIL import Image, ImageDraw, ImageFilter
 
 W, H = 1600, 1200
 OUT = "app/samples/neon-avenue.jpg"
-rng = random.Random(777)
+# v2: the scene seed is a CLI argument now (default 777), so a variant can be
+# re-rolled without editing the file: python3 tools/makeNeonSample.py 42
+rng = random.Random(int(sys.argv[1]) if len(sys.argv) > 1 else 777)
 
 img = Image.new("RGB", (W, H))
 d = ImageDraw.Draw(img, "RGBA")
@@ -68,8 +71,8 @@ for cx, cy, rad, col in ((820, 470, 64, (46, 230, 255)), (1420, 480, 52, (255, 4
               outline=col + (255,), width=6)
 
 # Wet street: long vertical reflections under each sign.
-for (sx, sy, sw, sh) in signs:
-    col = NEONS[signs.index((sx, sy, sw, sh)) % len(NEONS)]
+for j, (sx, sy, sw, sh) in enumerate(signs):
+    col = NEONS[j % len(NEONS)]
     for _ in range(26):
         x = rng.randint(sx, sx + sw)
         y0 = rng.randint(HORIZON + 10, H - 120)

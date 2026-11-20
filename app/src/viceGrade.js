@@ -95,9 +95,54 @@ export function applyGrain(ctx, w, h, alpha, seed) {
   ctx.restore();
 }
 
+/** A teal/pink "Vice nights" grade: teal shadows, hot-pink highlights. */
+export function applyViceNightsGrade(ctx, w, h) {
+  const wash = ctx.createLinearGradient(0, 0, w, h);
+  wash.addColorStop(0, 'rgba(46, 230, 255, 0.30)');
+  wash.addColorStop(0.5, 'rgba(20, 120, 160, 0.10)');
+  wash.addColorStop(1, 'rgba(255, 46, 136, 0.34)');
+  ctx.globalCompositeOperation = 'overlay';
+  ctx.fillStyle = wash;
+  ctx.fillRect(0, 0, w, h);
+  const glow = ctx.createRadialGradient(w * 0.72, h * 0.3, 0, w * 0.72, h * 0.3, w * 0.5);
+  glow.addColorStop(0, 'rgba(255, 46, 200, 0.22)');
+  glow.addColorStop(1, 'rgba(255, 46, 200, 0)');
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalCompositeOperation = 'source-over';
+  applyVignette(ctx, w, h, 0.42);
+  applyGrain(ctx, w, h, 0.06, 90210);
+}
+
+/** High-contrast duotone: desaturate, then push shadows to deep violet
+ * and highlights to hot pink, so the cover reads as a two-ink print. */
+export function applyDuotoneGrade(ctx, w, h) {
+  ctx.globalCompositeOperation = 'saturation';
+  ctx.fillStyle = '#808080';
+  ctx.fillRect(0, 0, w, h);
+  const twoTone = ctx.createLinearGradient(0, 0, w, h);
+  twoTone.addColorStop(0, 'rgba(24, 6, 64, 0.55)');
+  twoTone.addColorStop(0.55, 'rgba(120, 10, 110, 0.18)');
+  twoTone.addColorStop(1, 'rgba(255, 46, 136, 0.42)');
+  ctx.globalCompositeOperation = 'overlay';
+  ctx.fillStyle = twoTone;
+  ctx.fillRect(0, 0, w, h);
+  const lift = ctx.createLinearGradient(0, 0, 0, h);
+  lift.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+  lift.addColorStop(1, 'rgba(0, 0, 0, 0.36)');
+  ctx.fillStyle = lift;
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalCompositeOperation = 'source-over';
+  applyVignette(ctx, w, h, 0.52);
+  applyGrain(ctx, w, h, 0.09, 31337);
+}
+
 /** Runs the named grade over the whole canvas. */
 export function applyGrade(ctx, w, h, grade) {
   if (grade === 'neon') applyNeonGrade(ctx, w, h);
   else if (grade === 'noir') applyNoirGrade(ctx, w, h);
+  else if (grade === 'viceNights') applyViceNightsGrade(ctx, w, h);
+  else if (grade === 'duotone') applyDuotoneGrade(ctx, w, h);
   else applySunsetGrade(ctx, w, h);
 }

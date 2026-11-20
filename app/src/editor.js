@@ -3,8 +3,12 @@
 // The preview canvas IS the export canvas: what you see is what you get.
 
 import { EXPORT_SIZES, renderCover, panelAt } from './coverRenderer.js';
-import { loadSample, loadUserFile } from './photoStore.js';
+import { loadSample, loadUserFile, preloadSamples } from './photoStore.js';
 import { runShotScene } from './shotScenes.js';
+import { PANEL_LAYOUTS } from './panelLayouts.js';
+import { randomCombo } from './captionStyles.js';
+
+const GRADES = ['sunset', 'neon', 'noir', 'viceNights', 'duotone'];
 
 const canvas = document.getElementById('preview');
 const liveLine = document.getElementById('liveLine');
@@ -16,6 +20,7 @@ const slotsBox = document.getElementById('slots');
 const state = {
   layout: 'heroStrip',
   grade: 'sunset',
+  captionStyle: 'block',
   size: 'square',
   title: 'VICE CITY NIGHTS',
   subtitle: 'A sunset heist in four frames',
@@ -31,9 +36,12 @@ function paint() {
   renderCover(canvas, state);
   const loaded = state.photos.filter((p) => p && p.img).length;
   const size = EXPORT_SIZES[state.size];
+  const panels = PANEL_LAYOUTS.includes(state.layout)
+    ? { heroStrip: 4, quad: 4, trio: 3, solo: 1, wantedPoster: 3, storyVertical: 3 }[state.layout]
+    : 4;
   liveLine.textContent =
-    `${state.layout === 'solo' ? 1 : state.layout === 'trio' ? 3 : 4} panels · ` +
-    `${loaded} photo${loaded === 1 ? '' : 's'} loaded · ${size.label} · ${state.grade} grade`;
+    `${panels} panels · ${loaded} photo${loaded === 1 ? '' : 's'} loaded · ${size.label} · ` +
+    `${state.grade} grade · ${state.captionStyle} caption`;
   panelHint.textContent =
     `Panel ${state.selected + 1} selected — drag the preview to pan its photo.`;
   document.querySelectorAll('.slot').forEach((el, i) => {
@@ -79,10 +87,11 @@ function wireSegment(id, key, onChange) {
     if (!btn) return;
     seg.querySelectorAll('button').forEach((b) => b.classList.remove('on'));
     btn.classList.add('on');
-    const attr = btn.dataset.layout || btn.dataset.grade || btn.dataset.size;
+    const attr = btn.dataset.layout || btn.dataset.grade || btn.dataset.size || btn.dataset.caption;
     state[key] = attr;
-    if (key === 'layout' && state.selected >= (state.layout === 'solo' ? 1 : state.layout === 'trio' ? 3 : 4)) {
-      state.selected = 0;
+    if (key === 'layout') {
+      const count = { heroStrip: 4, quad: 4, trio: 3, solo: 1, wantedPoster: 3, storyVertical: 3 }[state.layout] || 4;
+      if (state.selected >= count) state.selected = 0;
     }
     onChange();
     paint();
@@ -91,7 +100,27 @@ function wireSegment(id, key, onChange) {
 
 wireSegment('layoutSeg', 'layout', () => {});
 wireSegment('gradeSeg', 'grade', () => {});
+wireSegment('captionSeg', 'captionStyle', () => {});
 wireSegment('sizeSeg', 'size', () => {});
+
+/** One-click remix: a fresh random layout + grade + caption style. */
+document.getElementById('remix').addEventListener('click', () => {
+  const combo = randomCombo(PANEL_LAYOUTS, GRADES);
+  state.layout = combo.layout;
+  state.grade = combo.grade;
+  state.captionStyle = combo.captionStyle;
+  const syncSeg = (id, attr, value) => {
+    document.querySelectorAll(`#${id} button`).forEach((b) => {
+      b.classList.toggle('on', b.dataset[attr] === value);
+    });
+  };
+  syncSeg('layoutSeg', 'layout', state.layout);
+  syncSeg('gradeSeg', 'grade', state.grade);
+  syncSeg('captionSeg', 'caption', state.captionStyle);
+  state.selected = 0;
+  status.textContent = `Remixed: ${state.layout} layout · ${state.grade} grade · ${state.captionStyle} caption.`;
+  paint();
+});
 
 for (const [id, key] of [['kicker', 'kicker'], ['title', 'title'], ['subtitle', 'subtitle']]) {
   document.getElementById(id).addEventListener('input', (e) => {
@@ -174,6 +203,7 @@ document.getElementById('export').addEventListener('click', () => {
 });
 
 buildSlots();
+preloadSamples(['pier', 'boulevard', 'sunset-drive', 'neon-avenue']);
 
 const shot = new URLSearchParams(location.search).get('shot');
 if (shot) {
@@ -187,6 +217,7 @@ if (shot) {
     };
     syncSeg('layoutSeg', 'layout', state.layout);
     syncSeg('gradeSeg', 'grade', state.grade);
+    syncSeg('captionSeg', 'caption', state.captionStyle);
     syncSeg('sizeSeg', 'size', state.size);
     document.getElementById('title').value = state.title;
     document.getElementById('subtitle').value = state.subtitle;

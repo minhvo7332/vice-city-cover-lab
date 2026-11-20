@@ -63,6 +63,11 @@ export function drawPosterTitle(ctx, text, x, bottomY, maxWidth, maxSize) {
 
 /** Small caps kicker with wide letter spacing, drawn letter by letter. */
 export function drawKicker(ctx, text, x, y, size) {
+  drawKickerStyled(ctx, text, x, y, size, '#ffe9a8', null);
+}
+
+/** Kicker in any colour, with an optional neon glow (shadowBlur) behind it. */
+export function drawKickerStyled(ctx, text, x, y, size, color, glowColor) {
   const clean = (text || '').trim().toUpperCase();
   if (!clean) return;
   ctx.font = `${size}px 'Archivo Black', sans-serif`;
@@ -70,11 +75,17 @@ export function drawKicker(ctx, text, x, y, size) {
   ctx.textBaseline = 'alphabetic';
   const gap = size * 0.28;
   let cx = x;
+  if (glowColor) {
+    ctx.save();
+    ctx.shadowColor = glowColor;
+    ctx.shadowBlur = size * 0.6;
+  }
   for (const ch of clean) {
-    ctx.fillStyle = '#ffe9a8';
+    ctx.fillStyle = color;
     ctx.fillText(ch, cx, y);
     cx += ctx.measureText(ch).width + gap;
   }
+  if (glowColor) ctx.restore();
 }
 
 /** The subtitle: Archivo Black, smaller, with a soft shadow. */

@@ -1,4 +1,4 @@
-// Vice City Cover Lab v1 — the entry program (Node 22, standard library only).
+// Vice City Cover Lab v2 — the entry program (Node 22, standard library only).
 // It hands the app in: copies app/ and screenshots/ from beside this file to
 // /output and writes /output/dossier.json with the vendored make.fun library,
 // exactly as the kit's starter does. Outside the grader, MAKEFUN_OUTPUT_DIR

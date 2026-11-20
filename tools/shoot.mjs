@@ -25,22 +25,22 @@ const SHOTS = [
   {
     file: '1-cover.jpg',
     viewport: { width: 1280, height: 720 },
-    url: '/?shot=cover&photo=sunset-drive&photo2=pier&photo3=boulevard&photo4=neon-avenue&layout=heroStrip&grade=sunset&size=wide&title=SUNSET%20DRIVE&subtitle=A%20vice%20city%20story%20in%20four%20frames',
+    url: '/?shot=cover&photo=pier&photo2=neon-avenue&photo3=boulevard&photo4=sunset-drive&layout=wantedPoster&grade=viceNights&size=wide&captionStyle=block&title=MOST%20WANTED&subtitle=One%20night.%20Three%20frames.%20No%20way%20out.&kicker=COVER%20LAB%20%C2%B7%20WANTED%20POSTER',
   },
   {
     file: '2-editor.jpg',
     viewport: { width: 1280, height: 960 },
-    url: '/?shot=editor&photo=pier&photo2=boulevard&photo3=sunset-drive&photo4=neon-avenue&layout=heroStrip&grade=sunset&size=square&title=VICE%20CITY%20NIGHTS&subtitle=A%20sunset%20heist%20in%20four%20frames',
+    url: '/?shot=editor&photo=pier&photo2=boulevard&photo3=sunset-drive&photo4=neon-avenue&layout=wantedPoster&grade=viceNights&size=square&captionStyle=neonGlow&title=VICE%20CITY%20NIGHTS&subtitle=A%20sunset%20heist%20in%20four%20frames',
   },
   {
     file: '3-cover-square.jpg',
     viewport: { width: 1024, height: 1024 },
-    url: '/?shot=cover&photo=pier&photo2=boulevard&photo3=sunset-drive&photo4=neon-avenue&layout=quad&grade=neon&size=square&title=NEON%20BOULEVARD&subtitle=Four%20frames%2C%20one%20night',
+    url: '/?shot=cover&photo=pier&photo2=boulevard&photo3=sunset-drive&photo4=neon-avenue&layout=quad&grade=duotone&size=square&captionStyle=outline&title=NEON%20BOULEVARD&subtitle=Four%20frames%2C%20one%20night',
   },
   {
     file: '4-cover-portrait.jpg',
     viewport: { width: 1024, height: 1280 },
-    url: '/?shot=cover&photo=sunset-drive&photo2=neon-avenue&photo3=pier&photo4=boulevard&layout=trio&grade=sunset&size=portrait&title=GOLDEN%20HOUR%20HEIST&subtitle=Three%20panels%2C%20one%20getaway',
+    url: '/?shot=cover&photo=sunset-drive&photo2=neon-avenue&photo3=boulevard&photo4=pier&layout=storyVertical&grade=sunset&size=portrait&captionStyle=block&oy3=0.62&title=GOLDEN%20HOUR%20HEIST&subtitle=Three%20panels%2C%20one%20getaway',
   },
 ];
 

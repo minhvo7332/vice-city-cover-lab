@@ -6,7 +6,7 @@
 
 import { layoutPanels, frameMetrics } from './panelLayouts.js';
 import { applyGrade } from './viceGrade.js';
-import { drawPosterTitle, drawKicker, drawSubtitle } from './coverLettering.js';
+import { drawCaptionBlock } from './captionStyles.js';
 
 export const EXPORT_SIZES = {
   square: { w: 1080, h: 1080, label: '1080 × 1080' },
@@ -86,14 +86,42 @@ export function renderCover(canvas, state) {
   const kickerSize = Math.round(Math.min(w, h) * 0.026);
   const subSize = Math.round(Math.min(w, h) * 0.03);
   const titleBottom = h - Math.round(h * 0.075);
-  const subY = h - Math.round(h * 0.038);
 
-  const titleHeight = drawPosterTitle(ctx, state.title, padX, titleBottom, textW, titleSize);
-  // Kicker sits just above the title block's top edge.
-  const kickerY = titleBottom - titleHeight - Math.round(kickerSize * 0.4);
-  drawKicker(ctx, state.kicker, padX, kickerY, kickerSize);
-  drawSubtitle(ctx, state.subtitle, padX, subY, subSize, textW);
+  drawCaptionBlock(
+    ctx,
+    { title: state.title, kicker: state.kicker, subtitle: state.subtitle },
+    padX,
+    titleBottom,
+    textW,
+    { title: titleSize, kicker: kickerSize, sub: subSize },
+    state.captionStyle || 'block',
+  );
+
+  // Wanted-poster stamp: a tilted red WANTED badge tucked into the hero
+  // panel's top-left corner, where it stamps the photo without covering a face.
+  if (state.layout === 'wantedPoster') drawWantedStamp(ctx, panels[0]);
   return { w, h, panels };
+}
+
+/** A tilted "WANTED" stamp in the top-left corner of the hero panel. */
+export function drawWantedStamp(ctx, heroRect) {
+  const size = Math.round(Math.min(heroRect.w, heroRect.h) * 0.055);
+  const stampW = size * 7.2;
+  const stampH = size * 1.9;
+  const cx = heroRect.x + stampW * 0.58;
+  const cy = heroRect.y + stampH * 0.85;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-0.09);
+  ctx.strokeStyle = '#ff2e3d';
+  ctx.lineWidth = Math.max(3, size * 0.09);
+  ctx.strokeRect(-stampW / 2, -stampH / 2, stampW, stampH);
+  ctx.font = `${size}px Anton, 'Arial Narrow', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ff2e3d';
+  ctx.fillText('WANTED', 0, 2);
+  ctx.restore();
 }
 
 /** Which panel (index) holds point (x, y) in cover pixels, or -1. */

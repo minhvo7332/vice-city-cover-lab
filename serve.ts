@@ -2,7 +2,7 @@
 // locally without a build step: `node serve.ts` serves app/ on http://localhost:8080.
 // It sends the MIME types an offline web app needs, refuses any path outside app/, and otherwise
 // does nothing clever: this is a development convenience, not a web server for the internet.
-import { createReadStream, statSync } from 'node:fs';
+import { createReadStream, readdirSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +22,7 @@ const MIME: Record<string, string> = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
+  '.avif': 'image/avif',
   '.gif': 'image/gif',
   '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
@@ -69,5 +70,12 @@ createServer((request, response) => {
   });
   createReadStream(file).pipe(response);
 }).listen(port, '127.0.0.1', () => {
-  console.log(`app/ is on http://localhost:${port}`);
+  const countFiles = (dir: string): number => {
+    let n = 0;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      n += entry.isDirectory() ? countFiles(join(dir, entry.name)) : 1;
+    }
+    return n;
+  };
+  console.log(`app/ is on http://localhost:${port} (${countFiles(root)} files)`);
 });

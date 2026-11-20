@@ -8,11 +8,14 @@ Run: python3 tools/makeSample.py  ->  app/samples/sunset-drive.jpg
 """
 import math
 import random
+import sys
 from PIL import Image, ImageDraw, ImageFilter
 
 W, H = 1600, 1200
 OUT = "app/samples/sunset-drive.jpg"
-rng = random.Random(20261119)
+# v2: the scene seed is a CLI argument now (default 20261119), so a variant
+# can be re-rolled without editing the file: python3 tools/makeSample.py 42
+rng = random.Random(int(sys.argv[1]) if len(sys.argv) > 1 else 20261119)
 
 img = Image.new("RGB", (W, H))
 px = img.load()
